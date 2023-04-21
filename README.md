@@ -1,4 +1,5 @@
 #Genetic Algorithm for Binary-Coded Optimization
+
 This is a Java implementation of a genetic algorithm for binary-coded optimization. The algorithm can be used to optimize a function with two variables, represented as binary strings.
 
 Usage

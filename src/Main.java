@@ -12,6 +12,8 @@ public class Main {
     public static double[] Draw(int n, int d , int a, int b){
         double[] vector = new double[n];
         Random rand = new Random();
+
+        //Limit the decimal places to value of d
         for(int i = 0; i < n; i++) {
             vector[i] = (rand.nextDouble() * (b - a) - b);
             vector[i] *= Math.pow(10, d);
@@ -23,7 +25,7 @@ public class Main {
 
     public static String[] Encode(double[] v, int d, int a, int b){
         String[] vector = new String[v.length];
-        double m = log2((b - a) * Math.pow(10, d));
+        double m = log2((b - a) * Math.pow(10, d)); //Min number od bits to encode the gene
         double help;
 
         for(int i = 0; i < v.length; i++){
@@ -41,7 +43,7 @@ public class Main {
 
     public static double[] Decode(String[] v, int d, int a, int b){
         double[] vector = new double[v.length];
-        double m = log2((b - a) * Math.pow(10, d));
+        double m = log2((b - a) * Math.pow(10, d)); //Min number od bits to encode the gene
         double help;
 
         for(int i = 0; i < v.length; i++){
@@ -77,17 +79,16 @@ public class Main {
             childrens[0][i] = child1.substring(n, n + p1[0].length());
             childrens[1][i] = child2.substring(n, n + p1[0].length());
         }
-//        if(!isVectorValid(childrens[0], 5, a, b))
 
         return childrens;
     }
 
     public static boolean isVectorValid(String[] vector, int d, int a, int b){
         double[] help = Decode(vector, d, a, b);
-        for(double h : help){
-            if(h < a || h > b)
+        for(double h : help)
+            if(h < -2 || h > 2)
                 return false;
-        }
+
         return true;
     }
 

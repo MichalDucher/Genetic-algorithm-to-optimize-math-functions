@@ -1,12 +1,15 @@
-# Genetic Algorithm for Binary-Coded Optimization
+# Genetic Algorithm
 
-This is a Java implementation of a genetic algorithm for binary-coded optimization. The algorithm can be used to optimize a function with two variables, represented as binary strings.
+This code uses a genetic algorithm to optimize the function -x1^2 - x2^2 + 2.
 
 ## Usage
-To use this algorithm, simply run the Main class. The algorithm is currently set up to optimize the function -x1^2 - x2^2 + 2, where x1 and x2 are the two variables being optimized.
 
-The algorithm can be customized by changing the values of the n, d, a, and b variables in the main method. These variables control the number of genes in each chromosome (n), the number of decimal places for each gene (d), and the range of values for each gene (a and b), and also function f can be chanched.
+To use this code, simply run the `Main` class. The program will output the randomly generated parents, their children after crossover, and the value of the fitness function for each child.
 
-For now it only generates, encode, decode and crossover chromosomes
+## Implementation Details
 
+The `Chromosome` class is used to represent a single chromosome in the genetic algorithm. It has a method for randomly generating its genes and another method for encoding and decoding the genes. The `Main` class contains the main logic for the genetic algorithm and uses the `Chromosome` class to represent individuals in the population.
 
+The algorithm uses one-point crossover to create children from the parents. Each child's fitness is calculated using the fitness function, and the child with the highest fitness is selected to become the new parent in the next generation.
+
+Feel free to use it however you like.

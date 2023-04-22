@@ -4,7 +4,7 @@ This code uses a genetic algorithm to optimize the function -x1^2 - x2^2 + 2.
 
 ## Usage
 
-To use this code, simply run the `Main` class. The program will output the randomly generated parents, their children after crossover, and the value of the fitness function for each child.
+To use this code, simply run the `Main` class. The program will output the randomly generated parents, their children after crossover, and the value of the function to optimize for each child. It does not optimize this function yet
 
 ## Implementation Details
 

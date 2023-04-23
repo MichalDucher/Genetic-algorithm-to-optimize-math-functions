@@ -101,13 +101,66 @@ public class Chromosome {
         child1.Decode();
         child2.Decode();
         Chromosome[] children = {child1, child2};
-        Chromosome.makeChildValid(children);
+        Chromosome.childControl(children);
 
 
         return children;
     }
 
-    private static void makeChildValid(Chromosome[] children){
+    public static Chromosome[] twoPointCrossover(Chromosome p1, Chromosome p2){
+        Chromosome child1 = new Chromosome(numberOfGenes, decimalPlaces, lowerLimit, upperLimit);
+        Chromosome child2 = new Chromosome(numberOfGenes, decimalPlaces, lowerLimit, upperLimit);
+
+        String parent1 = p1.toString();
+        String parent2 = p2.toString();
+
+        String c1;
+        String c2;
+
+        Random rand = new Random();
+        int crossoverPoint1 = rand.nextInt((int)minNumberOfBits*numberOfGenes);
+        int crossoverPoint2 = rand.nextInt((int)minNumberOfBits*numberOfGenes);
+        System.out.println(crossoverPoint1 + " " + crossoverPoint2);
+
+        int n = 0;
+
+        c1 = parent1.substring(0,  Math.min(crossoverPoint1, crossoverPoint2))
+                .concat(parent2.substring(Math.min(crossoverPoint1, crossoverPoint2),
+                        Math.max(crossoverPoint1, crossoverPoint2)))
+                .concat(parent1.substring(Math.max(crossoverPoint1, crossoverPoint2)));
+
+        c2 = parent2.substring(0,  Math.min(crossoverPoint1, crossoverPoint2))
+                .concat(parent1.substring(Math.min(crossoverPoint1, crossoverPoint2),
+                        Math.max(crossoverPoint1, crossoverPoint2)))
+                .concat(parent2.substring(Math.max(crossoverPoint1, crossoverPoint2)));
+
+        for(int i = 0; i < numberOfGenes; i++){
+            child1.chromosome[i] = c1.substring(n, n + p1.chromosome[i].length());
+            child2.chromosome[i] = c2.substring(n, n + p1.chromosome[i].length() );
+            n += (int)minNumberOfBits;
+        }
+        child1.Decode();
+        child2.Decode();
+        Chromosome[] children = {child1, child2};
+        Chromosome.childControl(children);
+
+
+        return children;
+    }
+
+    public static Chromosome[] pmxCrossover(Chromosome p1, Chromosome p2){
+        return null;
+    }
+
+    public void mutate(Chromosome chromosome){
+
+    }
+
+    public void inverse(Chromosome chromosome){
+
+    }
+
+    private static void childControl(Chromosome[] children){
         for(Chromosome child: children){
             if(child.vector[0] < lowerLimit){
                 child.vector[0] = lowerLimit;

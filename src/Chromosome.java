@@ -7,6 +7,8 @@ public class Chromosome {
     private static double minNumberOfBits;
     public String[] chromosome;
     public double[] vector;
+    private static Random rand;
+
     public Chromosome(int n, int d, int a, int b){
         numberOfGenes = n;
         decimalPlaces = d;
@@ -14,6 +16,7 @@ public class Chromosome {
         upperLimit = b;
         chromosome = new String[numberOfGenes];
         vector = new double[numberOfGenes];
+        rand = new Random();
         minNumberOfBits = log2((upperLimit - lowerLimit) * Math.pow(10, decimalPlaces)); //Min number od bits to encode the gene
     }
 
@@ -29,15 +32,13 @@ public class Chromosome {
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        for(String c : chromosome){
-            sb.append(c);
+        for(String gene : this.chromosome){
+            sb.append(gene);
         }
         return sb.toString();
     }
 
     private void Draw(){
-        Random rand = new Random();
-
         //Limit the decimal places to value of d
         for(int i = 0; i < numberOfGenes; i++) {
             vector[i] = (rand.nextDouble() * (upperLimit - lowerLimit) - upperLimit);
@@ -47,7 +48,7 @@ public class Chromosome {
         }
     }
 
-    private void Encode(){
+    public void Encode(){
         double help;
 
         for(int i = 0; i < numberOfGenes; i++){
@@ -85,7 +86,6 @@ public class Chromosome {
         String c1;
         String c2;
 
-        Random rand = new Random();
         int crossoverPoint = rand.nextInt((int)minNumberOfBits*numberOfGenes);
         System.out.println(crossoverPoint);
         int n = 0;
@@ -148,15 +148,63 @@ public class Chromosome {
         return children;
     }
 
-    public static Chromosome[] pmxCrossover(Chromosome p1, Chromosome p2){
-        return null;
+    public static Chromosome[] pmxCrossover(Chromosome parent1, Chromosome parent2) {
+        Chromosome child1 = new Chromosome(numberOfGenes, decimalPlaces, lowerLimit, upperLimit);
+        Chromosome child2 = new Chromosome(numberOfGenes, decimalPlaces, lowerLimit, upperLimit);
+
+        Chromosome[] children = {child1, child2};
+
+        return children;
     }
 
-    public void mutate(Chromosome chromosome){
+
+    public void mutate(double alpha){
+        Random rand = new Random();
+        char[] chromosome = this.toString().toCharArray();
+
+        for(int i = 0; i < chromosome.length; i++){
+            if(rand.nextDouble() < alpha)
+                chromosome[i] = chromosome[i] == '0' ? '1' : '0';
+
+        }
+
+        String mutated = new String(chromosome);
+        int n = 0;
+        for(int i = 0; i < numberOfGenes; i++) {
+            this.chromosome[i] = mutated.substring(n, n + (int)Math.ceil(minNumberOfBits));
+            n += minNumberOfBits;
+        }
+
+        childControl(this);
+
+        this.Decode();
 
     }
 
-    public void inverse(Chromosome chromosome){
+    public void inverse(){
+        char[] chromosome = this.toString().toCharArray();
+
+        int index = rand.nextInt(chromosome.length);
+        if(index == chromosome.length - 1){
+            char help = chromosome[index];
+            chromosome[index] = chromosome[0];
+            chromosome[0] = help;
+        }else{
+            char help = chromosome[index];
+            chromosome[index] = chromosome[index + 1];
+            chromosome[index + 1] = help;
+        }
+
+        String inversed = new String(chromosome);
+        int n = 0;
+        for(int i = 0; i < numberOfGenes; i++) {
+            this.chromosome[i] = inversed.substring(n, n + (int)Math.ceil(minNumberOfBits));
+            n += (int)Math.ceil(minNumberOfBits);
+        }
+
+        childControl(this);
+
+        this.Decode();
 
     }
 
@@ -179,5 +227,16 @@ public class Chromosome {
                 child.Encode();
             }
         }
+    }
+
+    private static void childControl(Chromosome child){
+        for(double gene : child.vector){
+            if(gene > upperLimit)
+                gene = upperLimit;
+            if(gene < lowerLimit)
+                gene = lowerLimit;
+        }
+
+        child.Encode();
     }
 }

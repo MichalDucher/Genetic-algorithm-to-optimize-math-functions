@@ -11,12 +11,17 @@ public class Main {
 
         Function<Double[], Double> fun = (arg) -> -Math.pow(arg[0], 2) - Math.pow(arg[1],2) + 2; //Lambda unction to optimize
 
-        Population population = new Population(n1, n2, d, a, b); //Creating a new population of random chromosomes
+        Population p1 = new Population(n1, n2, d, a, b); //Creating a new population
 
-        population.evaluate(fun);   //Evaluating function on every unit of population
-        population.showPopulationWithEval();
-        System.out.println("Average fitness value: \n" + population.avgFitness());
-        System.out.println("Number of chromosomes below average: \n" + population.numberOfChromosomesBelowAvg());
-        System.out.println("Number of chromosomes above average: \n" + population.numberOfChromosomesAboveAvg());
+        p1.randomChromosomes(); //Seting random chromosomes in population
+
+        p1.evaluate(fun);   //Evaluating function on every chromosome of population
+        System.out.println("Population 1: \n======================================================");
+        p1.showPopulationWithEval();
+
+        System.out.println("Population 2: \n======================================================");
+        Population p2 = p1.roulettePopulation(); //New population created by roulette method
+        p2.evaluate(fun);
+        p2.showPopulationWithEval();
     }
 }

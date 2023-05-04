@@ -1,10 +1,6 @@
+import java.util.function.Function;
+
 public class Main {
-
-
-    public static double f(double x1, double x2){
-        return -Math.pow(x1,2) - Math.pow(x2, 2) + 2;
-    }
-
 
     public static void main(String[] args) {
         int n1 = 20; //Number of chromosomes for population
@@ -13,18 +9,14 @@ public class Main {
         int a = -2; //Lower limit of the range for value of gene
         int b = 2; //Upper limit of the range for value of gene
 
-        /*Chromosome chromosome = new Chromosome(n, d, a, b);
-        chromosome.randomChromosome();
+        Function<Double[], Double> fun = (arg) -> -Math.pow(arg[0], 2) - Math.pow(arg[1],2) + 2; //Lambda unction to optimize
 
-        System.out.println("chromosome: \t\t\t" + chromosome);
-        chromosome.inverse();
-        System.out.println("chromosome inversed: \t" + chromosome);
+        Population population = new Population(n1, n2, d, a, b); //Creating a new population of random chromosomes
 
-        double valueF = f(chromosome.vector[0],chromosome.vector[1]);
-
-        System.out.println("Value of f function for inversed chromosome: " + valueF);*/
-
-        Population population = new Population(n1, n2, d, a, b);
-        population.showPopulation();
+        population.evaluate(fun);   //Evaluating function on every unit of population
+        population.showPopulationWithEval();
+        System.out.println("Average fitness value: \n" + population.avgFitness());
+        System.out.println("Number of chromosomes below average: \n" + population.numberOfChromosomesBelowAvg());
+        System.out.println("Number of chromosomes above average: \n" + population.numberOfChromosomesAboveAvg());
     }
 }

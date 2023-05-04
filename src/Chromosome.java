@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Random;
 public class Chromosome {
     private static int numberOfGenes;
@@ -5,6 +6,7 @@ public class Chromosome {
     private static int lowerLimit;
     private static int upperLimit;
     private static double minNumberOfBits;
+    private double fitness;
     public String[] chromosome;
     public double[] vector;
     private static Random rand;
@@ -74,6 +76,14 @@ public class Chromosome {
             vector[i] = Math.round(vector[i]);
             vector[i] /= Math.pow(10, decimalPlaces);
         }
+    }
+
+    public void setFitness(double fitness){
+        this.fitness = fitness;
+    }
+
+    public double getFitness(){
+        return this.fitness;
     }
 
     public static Chromosome[] onePointCrossover(Chromosome p1, Chromosome p2){
@@ -148,31 +158,52 @@ public class Chromosome {
         return children;
     }
 
-    public static Chromosome[] pmxCrossover(Chromosome parent1, Chromosome parent2) {
-        Chromosome child1 = new Chromosome(numberOfGenes, decimalPlaces, lowerLimit, upperLimit);
-        Chromosome child2 = new Chromosome(numberOfGenes, decimalPlaces, lowerLimit, upperLimit);
-
-        Chromosome[] children = {child1, child2};
-
-        return children;
-    }
+//    public static Chromosome[] pmxCrossover(Chromosome p1, Chromosome p2) {
+//        Chromosome child1 = new Chromosome(numberOfGenes, decimalPlaces, lowerLimit, upperLimit);
+//        Chromosome child2 = new Chromosome(numberOfGenes, decimalPlaces, lowerLimit, upperLimit);
+//
+//        String parent1 = p1.toString();
+//        String parent2 = p2.toString();
+//
+//        StringBuilder c1 = new StringBuilder(parent2);
+//        StringBuilder c2 = new StringBuilder(parent1);
+//
+//        HashMap<String, String> map = new HashMap<>();
+//
+//        int startSegment = rand.nextInt(parent1.length());
+//        int endSegment = rand.nextInt(parent1.length());
+//        if(startSegment > endSegment){
+//            int help = startSegment;
+//            startSegment = endSegment;
+//            endSegment = help;
+//        }
+//
+//        for(int i = startSegment; i < endSegment; i++){
+//
+//        }
+//
+//        Chromosome[] children = {child1, child2};
+//
+//        return children;
+//    }
 
 
     public void mutate(double alpha){
         Random rand = new Random();
         char[] chromosome = this.toString().toCharArray();
+        StringBuilder help = new StringBuilder();
 
-        for(int i = 0; i < chromosome.length; i++){
+        for(char c : chromosome){
             if(rand.nextDouble() < alpha)
-                chromosome[i] = chromosome[i] == '0' ? '1' : '0';
-
+                help.append(c == '0' ? '1' : '0');
+            else
+                help.append(c);
         }
 
-        String mutated = new String(chromosome);
         int n = 0;
         for(int i = 0; i < numberOfGenes; i++) {
-            this.chromosome[i] = mutated.substring(n, n + (int)Math.ceil(minNumberOfBits));
-            n += minNumberOfBits;
+            this.chromosome[i] = help.substring(n, n + (int)Math.ceil(minNumberOfBits));
+            n += (int)Math.ceil(minNumberOfBits);
         }
 
         childControl(this);
@@ -202,10 +233,8 @@ public class Chromosome {
             n += (int)Math.ceil(minNumberOfBits);
         }
 
-        childControl(this);
-
         this.Decode();
-
+        childControl(this);
     }
 
     private static void childControl(Chromosome[] children){
@@ -231,12 +260,14 @@ public class Chromosome {
 
     private static void childControl(Chromosome child){
         for(double gene : child.vector){
-            if(gene > upperLimit)
+            if(gene > upperLimit) {
                 gene = upperLimit;
-            if(gene < lowerLimit)
+                child.Encode();
+            }
+            if(gene < lowerLimit){
                 gene = lowerLimit;
+                child.Encode();
+            }
         }
-
-        child.Encode();
     }
 }
